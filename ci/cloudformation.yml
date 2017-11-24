@@ -46,7 +46,7 @@ Resources:
     Properties: 
       Artifacts:
         Location: !Sub ${Name}.${BucketSuffix}
-        Name: storybook
+        Name: build
         NamespaceType: NONE
         Packaging: NONE
         Type: S3
