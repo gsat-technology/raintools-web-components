@@ -114,7 +114,7 @@ export default class LoginForm extends Component {
             errorText={this.state.password.error}
           />
         </div>
-        <div styles={styles.button}>
+        <div style={styles.button}>
           <RaisedButton disabled={this.state.buttonDisabled} label="Login" primary={true} onClick={this.handleLoginClick} />
         </div>
       </div>
