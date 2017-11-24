@@ -1,0 +1,148 @@
+
+Parameters:
+  Name:
+    Type: String
+    Description: name for CodeBuild and CodePipeline and artifact bucket
+
+  BucketSuffix:
+    Type: String
+    Description: bucket suffix (to make unique)
+
+  RepoLocation: 
+    Type: String
+    Description: the clone url
+
+Resources:
+  
+  ArtifactBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub ${Name}.${BucketSuffix}
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      
+  ArtifactBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref ArtifactBucket
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - s3:GetObject
+            Effect: "Allow"
+            Resource: !Sub arn:aws:s3:::${Name}.${BucketSuffix}/*     
+            Principal: "*"
+          -
+            Action:
+              - s3:ListBucket
+            Effect: "Allow"
+            Resource: !Sub arn:aws:s3:::${Name}.${BucketSuffix}
+            Principal: "*"
+
+  CodeBuild:
+    Type: "AWS::CodeBuild::Project"
+    Properties: 
+      Artifacts:
+        Location: S3
+        Name: dist
+        NamespaceType: NONE
+        Packaging: NONE
+        Type: S3
+      Description: builds react-components and outputs storybook to s3
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/nodejs:6.3.1
+      Name: !Ref Name
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Source:
+        BuildSpec: buildspec.yml
+        Location: !Ref RepoLocation
+        Type: GITHUB
+
+  CodeBuildRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "codebuild.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        -
+          PolicyName: "inline-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: 
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${Name}
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${Name}:*
+              -
+                Effect: "Allow"
+                Action:
+                  - codecommit:GitPull
+                Resource: 
+                  - !Sub arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${Name}
+              -
+                Effect: "Allow"
+                Action:
+                  - s3:PutObject
+                Resource: 
+                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+
+
+  # CodePipeline:
+  #   Type: "AWS::CodePipeline::Pipeline"
+  #   Properties:
+  #     ArtifactStore:
+  #       ArtifactBucket
+  #     Name: !Ref Name
+  #     RoleArn: !GetAtt CodePipelineRole.Arn
+  #     Stages:
+  #       - Stages
+
+  # CodePipelineRole:
+  #   Type: "AWS::IAM::Role"
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         -
+  #           Effect: "Allow"
+  #           Principal:
+  #             Service:
+  #               - "codebuild.amazonaws.com"
+  #           Action:
+  #             - "sts:AssumeRole"
+  #     Path: "/"
+  #     Policies:
+  #       -
+  #         PolicyName: "inline-policy"
+  #         PolicyDocument:
+  #           Version: "2012-10-17"
+  #           Statement:
+  #             -
+  #               Effect: "Allow"
+  #               Action:
+  #                 - logs:CreateLogGroup
+  #                 - logs:CreateLogStream
+  #                 - logs:PutLogEvents
+  #               Resource: 
+  #                 - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${Name}
+  #                 - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${Name}:*
+
+              
