@@ -45,8 +45,8 @@ Resources:
     Type: "AWS::CodeBuild::Project"
     Properties: 
       Artifacts:
-        Location: S3
-        Name: dist
+        Location: !Sub ${Name}.${BucketSuffix}
+        Name: storybook
         NamespaceType: NONE
         Packaging: NONE
         Type: S3
