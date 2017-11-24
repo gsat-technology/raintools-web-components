@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Starting install phase
+  pre_build:
+    commands:
+      - echo Starting pre_build phase
+      - npm install
+  build:
+    commands:
+      - echo Starting build phase
+      - npm run test
+      - npm run storybook-static
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - .storybookout/*
