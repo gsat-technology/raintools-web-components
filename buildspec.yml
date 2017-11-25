@@ -16,6 +16,8 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo exporting to bucket $storybookBucket
+      - aws s3 cp --recursive storybookstatic/* $storybookBucket
 artifacts:
   files:
     - storybookstatic/**/*

@@ -8,13 +8,25 @@ Parameters:
     Type: String
     Description: bucket suffix (to make unique)
 
-  RepoLocation: 
+  GithubOwner:
     Type: String
-    Description: the clone url
+    Description: the owner of the github account (source)
+  
+  GithubRepoName:
+    Type: String
+    Description: name of the github repo
+
+  GithubPersonalAccessToken:
+    Type: String
+    Description: instructions http://docs.aws.amazon.com/codepipeline/latest/userguide/pipelines-edit.html
+
+  DefaultArtifactsBucket:
+    Type: String
+    Description: default codepipeline bucket for your account
 
 Resources:
   
-  ArtifactBucket:
+  StorybookBucket:
     Type: "AWS::S3::Bucket"
     DeletionPolicy: Delete
     Properties:
@@ -22,10 +34,10 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
       
-  ArtifactBucketPolicy:
+  StorybookBucketPolicy:
     Type: "AWS::S3::BucketPolicy"
     Properties:
-      Bucket: !Ref ArtifactBucket
+      Bucket: !Ref StorybookBucket
       PolicyDocument:
         Statement:
           -
@@ -41,26 +53,28 @@ Resources:
             Resource: !Sub arn:aws:s3:::${Name}.${BucketSuffix}
             Principal: "*"
 
+
   CodeBuild:
     Type: "AWS::CodeBuild::Project"
     Properties: 
       Artifacts:
-        Location: !Sub ${Name}.${BucketSuffix}
         Name: build
-        NamespaceType: NONE
         Packaging: NONE
-        Type: S3
+        Type: CODEPIPELINE
       Description: builds react-components and outputs storybook to s3
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/nodejs:6.3.1
+        Image: aws/codebuild/nodejs:7.0.0
+        EnvironmentVariables:
+          -
+            Name: stroybookBucket
+            Value: !Ref StorybookBucket
       Name: !Ref Name
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
         BuildSpec: buildspec.yml
-        Location: !Ref RepoLocation
-        Type: GITHUB
+        Type: CODEPIPELINE
 
   CodeBuildRole:
     Type: "AWS::IAM::Role"
@@ -94,55 +108,92 @@ Resources:
               -
                 Effect: "Allow"
                 Action:
-                  - codecommit:GitPull
+                  - s3:*
                 Resource: 
-                  - !Sub arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${Name}
+                  - !Sub arn:aws:s3:::${StorybookBucket}
+                  - !Sub arn:aws:s3:::${StorybookBucket}/*
               -
                 Effect: "Allow"
                 Action:
-                  - s3:PutObject
+                  - ssm:GetParameters
                 Resource: 
-                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CodeBuild/*
+                
 
-
-  # CodePipeline:
-  #   Type: "AWS::CodePipeline::Pipeline"
-  #   Properties:
-  #     ArtifactStore:
-  #       ArtifactBucket
-  #     Name: !Ref Name
-  #     RoleArn: !GetAtt CodePipelineRole.Arn
-  #     Stages:
-  #       - Stages
-
-  # CodePipelineRole:
-  #   Type: "AWS::IAM::Role"
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: 2012-10-17
-  #       Statement:
-  #         -
-  #           Effect: "Allow"
-  #           Principal:
-  #             Service:
-  #               - "codebuild.amazonaws.com"
-  #           Action:
-  #             - "sts:AssumeRole"
-  #     Path: "/"
-  #     Policies:
-  #       -
-  #         PolicyName: "inline-policy"
-  #         PolicyDocument:
-  #           Version: "2012-10-17"
-  #           Statement:
-  #             -
-  #               Effect: "Allow"
-  #               Action:
-  #                 - logs:CreateLogGroup
-  #                 - logs:CreateLogStream
-  #                 - logs:PutLogEvents
-  #               Resource: 
-  #                 - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${Name}
-  #                 - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${Name}:*
 
               
+  CodePipeline:
+    Type: "AWS::CodePipeline::Pipeline"
+    Properties:
+      ArtifactStore:
+        Location: !Ref DefaultArtifactsBucket
+        Type: S3
+      Name: !Ref Name
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      Stages:
+        -
+          Name: SourceGithub
+          Actions:
+            - 
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration:
+                Owner: !Ref GithubOwner
+                Repo: !Ref GithubRepoName 
+                PollForSourceChanges: true
+                Branch: master
+                OAuthToken: !Ref GithubPersonalAccessToken
+              Name: Source
+              RunOrder: 1
+              OutputArtifacts:
+                - Name: source
+        -
+          Name: CodeBuild
+          Actions:
+            - 
+              InputArtifacts:
+                - Name: source
+              ActionTypeId:
+                Category: Build
+                Owner: AWS 
+                Provider: CodeBuild
+                Version: 1
+              Configuration:
+                ProjectName: !Ref Name
+              Name: CodeBuild
+              RunOrder: 2
+              # OutputArtifacts:
+              #   - Name: build
+
+  CodePipelineRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "codepipeline.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        -
+          PolicyName: "inline-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - codebuild:BatchGetBuilds
+                  - codebuild:StartBuild
+                Resource: "*"
+    
+              
+                
