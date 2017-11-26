@@ -68,7 +68,7 @@ Resources:
         Image: aws/codebuild/nodejs:7.0.0
         EnvironmentVariables:
           -
-            Name: stroybookBucket
+            Name: storybookBucket
             Value: !Ref StorybookBucket
       Name: !Ref Name
       ServiceRole: !GetAtt CodeBuildRole.Arn
