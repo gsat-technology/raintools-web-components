@@ -115,6 +115,13 @@ Resources:
               -
                 Effect: "Allow"
                 Action:
+                  - s3:*
+                Resource: 
+                  - !Sub arn:aws:s3:::${DefaultArtifactsBucket}
+                  - !Sub arn:aws:s3:::${DefaultArtifactsBucket}/*
+              -
+                Effect: "Allow"
+                Action:
                   - ssm:GetParameters
                 Resource: 
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/CodeBuild/*
@@ -165,8 +172,7 @@ Resources:
                 ProjectName: !Ref Name
               Name: CodeBuild
               RunOrder: 2
-              # OutputArtifacts:
-              #   - Name: build
+
 
   CodePipelineRole:
     Type: "AWS::IAM::Role"
@@ -194,6 +200,13 @@ Resources:
                   - codebuild:BatchGetBuilds
                   - codebuild:StartBuild
                 Resource: "*"
+              -
+                Effect: "Allow"
+                Action:
+                  - s3:*
+                Resource: 
+                  - !Sub arn:aws:s3:::${DefaultArtifactsBucket}
+                  - !Sub arn:aws:s3:::${DefaultArtifactsBucket}/*
     
               
                 
