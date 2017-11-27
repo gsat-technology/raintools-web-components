@@ -5,6 +5,7 @@
 /stories
 /test
 /dist
+/src/index.js
 
 .babelrc
 .npmrc
