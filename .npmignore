@@ -1,0 +1,14 @@
+
+/cicd
+/storybookstatic
+/.storybook 
+/stories
+/test
+/dist
+
+.babelrc
+.npmrc
+package-lock.json
+webpack.config.js
+
+

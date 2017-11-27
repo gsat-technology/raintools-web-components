@@ -1,7 +1,7 @@
 {
-  "name": "raintools-web-components",
+  "name": "@gsat/react-components",
   "version": "1.0.0",
-  "description": "raintools web components",
+  "description": "react components",
   "main": "index.js",
   "repository": "",
   "scripts": {

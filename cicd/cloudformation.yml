@@ -24,6 +24,10 @@ Parameters:
     Type: String
     Description: default codepipeline bucket for your account
 
+  NPMToken:
+    Type: String
+    Description: token for publishing to npm registry
+
 Resources:
   
   StorybookBucket:
@@ -70,10 +74,12 @@ Resources:
           -
             Name: storybookBucket
             Value: !Ref StorybookBucket
+          - Name: npmToken
+            Value: !Ref NPMToken
       Name: !Ref Name
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
-        BuildSpec: buildspec.yml
+        BuildSpec: cicd/buildspec.yml
         Type: CODEPIPELINE
 
   CodeBuildRole:

@@ -1,33 +1,11 @@
+# @gsat/react-components
 
-# react-components
+## Installation
 
-### clone 
-```
-git clone https://github.com/gsat-technology/react-components.git
-```
+### NPM
 
-### install node modules
-```
-cd react-components
-npm install
+```sh
+npm install --save @gsat/react-components
 ```
 
-### install storybook cli tool
-```
-npm i -g @storybook/cli 
-```
-
-### run storybook
-```
-npm run storybook
-```
-
-### run tests
-```
-npm run test
-```
-
-### deploy storybook as static app
-```
-npm run storybook-static
-```
+These are just some general UI components.

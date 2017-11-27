@@ -17,6 +17,11 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - publishing to npm registry
+      - echo "//registry.npmjs.org/:_authToken=cd08c69c-b29d-4df3-b19b-c7519e7398ab" > .npmrc
+      - echo "@gsat:registry=https://registry.npmjs.org/${npmToken}" >> .npmrc
+      - echo "scope=gsat" >> .npmrc
+      - npm publish --access public
       - echo exporting to bucket $storybookBucket
       - aws s3 cp --recursive storybookstatic/ s3://$storybookBucket
 artifacts:
