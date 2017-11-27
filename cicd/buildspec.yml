@@ -19,7 +19,7 @@ phases:
     commands:
       - echo Publishing to npm registry
       - echo "//registry.npmjs.org/:_authToken=cd08c69c-b29d-4df3-b19b-c7519e7398ab" > .npmrc
-      - echo "@gsat:registry=https://registry.npmjs.org/${npmToken}" >> .npmrc
+      - echo "@gsat:registry=https://registry.npmjs.org/$npmToken" >> .npmrc
       - echo "scope=gsat" >> .npmrc
       - npm publish --access public
       - echo Exporting to bucket $storybookBucket
