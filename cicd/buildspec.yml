@@ -3,28 +3,24 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Starting install phase
+      - echo  install phase
   pre_build:
     commands:
-      - echo Starting pre_build phase
       - printenv
       - npm install
-  build:
-    commands:
-      - echo Starting build phase
-      - npm run test
-      - npm run storybook-static
-      - echo Build completed on `date`
-  post_build:
-    commands:
-      - echo Publishing to npm registry
       - echo "//registry.npmjs.org/:_authToken=$npmToken" > .npmrc
       - echo "@gsat:registry=https://registry.npmjs.org/" >> .npmrc
       - echo "scope=gsat" >> .npmrc
       - echo ".npmrc file content" ; cat .npmrc
+  build:
+    commands:
+      - npm run test
       - npm publish --access public
-      - echo Exporting to bucket $storybookBucket
+      - npm run storybook-static
       - aws s3 cp --recursive storybookstatic/ s3://$storybookBucket
+  post_build:
+    commands:
+      - echo postbuild phase
 artifacts:
   files:
     - storybookstatic/**/*
