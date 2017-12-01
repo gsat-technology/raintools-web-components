@@ -4,10 +4,6 @@ Parameters:
     Type: String
     Description: name for CodeBuild and CodePipeline and artifact bucket
 
-  BucketSuffix:
-    Type: String
-    Description: bucket suffix (to make unique)
-
   GithubOwner:
     Type: String
     Description: the owner of the github account (source)
@@ -28,13 +24,35 @@ Parameters:
     Type: String
     Description: token for publishing to npm registry
 
+  HostedZoneName:
+      Type: String
+      Description: Route53 hosted zone domain name e.g. yourdomain.com (don't include trailing '.')
+
+Mappings:
+  HostedZoneIdMap:
+    #extend if record set needed in other regions   
+    ap-southeast-2:
+      hostedZoneid: Z1WCIGYICN2BYD
+
 Resources:
   
+  PublicWebsiteDNS:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: !Sub ${HostedZoneName}.
+      Comment: alias pointing to website-enabled s3 bucket
+      RecordSets:
+      - Name: !Sub ${StorybookBucket}.
+        Type: A
+        AliasTarget:
+          HostedZoneId: !FindInMap [HostedZoneIdMap, !Ref "AWS::Region", hostedZoneid]
+          DNSName: !Sub s3-website-${AWS::Region}.amazonaws.com
+
   StorybookBucket:
     Type: "AWS::S3::Bucket"
     DeletionPolicy: Delete
     Properties:
-      BucketName: !Sub ${Name}.${BucketSuffix}
+      BucketName: !Sub ${Name}.${HostedZoneName}
       WebsiteConfiguration:
         IndexDocument: index.html
       
@@ -48,13 +66,13 @@ Resources:
             Action:
               - s3:GetObject
             Effect: "Allow"
-            Resource: !Sub arn:aws:s3:::${Name}.${BucketSuffix}/*     
+            Resource: !Sub arn:aws:s3:::${Name}.${HostedZoneName}/*     
             Principal: "*"
           -
             Action:
               - s3:ListBucket
             Effect: "Allow"
-            Resource: !Sub arn:aws:s3:::${Name}.${BucketSuffix}
+            Resource: !Sub arn:aws:s3:::${Name}.${HostedZoneName}
             Principal: "*"
 
 
