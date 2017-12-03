@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
+import InfoIcon from 'material-ui/svg-icons/action/info'
+import { blue500 } from 'material-ui/styles/colors';
 
-export default class LoginForm extends Component {
+
+export default class UserForm extends Component {
   
   constructor(props) {
     super(props)
@@ -18,7 +21,7 @@ export default class LoginForm extends Component {
         error: '',
         touched: false
       },
-      buttonDisabled: true
+      buttonDisabled: this.props.passwordValidator || this.props.usernameValidator ? true : false 
     }
   }
 
@@ -35,7 +38,7 @@ export default class LoginForm extends Component {
   handlePasswordOnBlur = () => {
     
       return this.setState({
-        username: {
+        password: {
           ...this.state.password,
           touched: true
         }
@@ -48,8 +51,9 @@ export default class LoginForm extends Component {
       password: {
         ...this.state.password,
         value: event.target.value,
-        error: event.target.value.match(this.props.passwordValidator) == null ? 'invalid' : ''
-      }
+        error: this.props.passwordValidator !== undefined && event.target.value.match(this.props.passwordValidator) == null ? 'invalid' : ''
+      },
+      buttonDisabled: this.state.username.error === '' && this.state.password.error === '' ? false : true
     })
   }
 
@@ -59,7 +63,7 @@ export default class LoginForm extends Component {
       username: {
         ...this.state.username,
         value: event.target.value,
-        error: event.target.value.match(this.props.usernameValidator) == null ? 'invalid' : ''
+        error: this.props.usernameValidator !== undefined && event.target.value.match(this.props.usernameValidator) == null ? 'invalid' : ''
       },
       buttonDisabled: this.state.username.error === '' && this.state.password.error === '' ? false : true
     })
@@ -76,24 +80,13 @@ export default class LoginForm extends Component {
 
   render() {
 
-    const styles = {
-      container: {
-        display: 'inline-flex',
-        alignItems: 'center'
-      },
-      textField: {
-        margin: '0px 20px 0px 0px'
-      },
-      button: {
-        margin: '0px 20px 0px 0px'
-      }
-    }
+
+    const errorMessage = obj => obj.touched && obj.error.length > 0 ? obj.error : ""
 
     return (
-      <div style={styles.container}>
+      <div>
         <div>
           <TextField
-            style={styles.textField}
             key='username'
             id='username'
             hintText="you@examle.com"
@@ -102,22 +95,40 @@ export default class LoginForm extends Component {
             onChange={this.handleUsernameChange}
             errorText={this.state.username.touched ? this.state.username.error : ''}
             onBlur={this.handleUsernameOnBlur}
-          />
+          /><br />
           <TextField
-            style={styles.textField}
             key='password'
             id='password'
             hintText=""
             floatingLabelText="Password"
             value={this.state.password.value}
             onChange={this.handlePasswordChange}
-            errorText={this.state.password.error}
+            errorText={errorMessage(this.state.password)}
+            onBlur={this.handlePasswordOnBlur}
           />
+          { this.props.passwordTooltip ? <PasswordTooltip /> : <div />}
         </div>
-        <div style={styles.button}>
-          <RaisedButton disabled={this.state.buttonDisabled} label="Login" primary={true} onClick={this.handleLoginClick} />
+        <br />
+        <div>
+          <RaisedButton 
+            disabled={this.state.buttonDisabled}
+            label="Login"
+            primary={true}
+            onClick={this.handleLoginClick} 
+          />
         </div>
       </div>
     )
   }
+}
+
+const PasswordTooltip = (text) => {
+
+  const handleMouseEnter = () => {
+    //todo
+  }
+
+  return (
+    <InfoIcon onMouseEnter={handleMouseEnter} style={{marginRight: 24}} color={blue500} />
+  )
 }
