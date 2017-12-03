@@ -1,12 +1,12 @@
 import { renderComponent, expect } from '../test_helper'
-import LoginForm from '../../src/components/LoginForm'
+import UserForm from '../../src/components/UserForm'
 
-describe('LoginForm', () => {
+describe('UserForm', () => {
 
     let component
 
     beforeEach(() => {
-        component = renderComponent(LoginForm)
+        component = renderComponent(UserForm)
     })
 
     it('it has two inputs', () => {
