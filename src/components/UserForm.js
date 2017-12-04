@@ -80,7 +80,6 @@ export default class UserForm extends Component {
 
   render() {
 
-
     const errorMessage = obj => obj.touched && obj.error.length > 0 ? obj.error : ""
 
     return (
@@ -129,6 +128,10 @@ const PasswordTooltip = (text) => {
   }
 
   return (
-    <InfoIcon onMouseEnter={handleMouseEnter} style={{marginRight: 24}} color={blue500} />
+    <InfoIcon 
+      onMouseEnter={handleMouseEnter}
+      style={{marginRight: 24}}
+      color={blue500}
+    />
   )
 }
