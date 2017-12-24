@@ -1,7 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './components/App'
+export UserForm from './components/UserForm'
+export MapPicker from './components/MapPicker'
 
-ReactDOM.render(
-    <App />
-  , document.querySelector('.container'))
