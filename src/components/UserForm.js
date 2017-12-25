@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import InfoIcon from 'material-ui/svg-icons/action/info'
-import { blue500 } from 'material-ui/styles/colors';
-
+import { blue500 } from 'material-ui/styles/colors'
 
 export default class UserForm extends Component {
-  
   constructor(props) {
     super(props)
 
@@ -21,12 +19,14 @@ export default class UserForm extends Component {
         error: '',
         touched: false
       },
-      buttonDisabled: this.props.passwordValidator || this.props.usernameValidator ? true : false 
+      buttonDisabled:
+        this.props.passwordValidator || this.props.usernameValidator
+          ? true
+          : false
     }
   }
 
   handleUsernameOnBlur = () => {
-  
     return this.setState({
       username: {
         ...this.state.username,
@@ -36,36 +36,47 @@ export default class UserForm extends Component {
   }
 
   handlePasswordOnBlur = () => {
-    
-      return this.setState({
-        password: {
-          ...this.state.password,
-          touched: true
-        }
-      })
-    }
+    return this.setState({
+      password: {
+        ...this.state.password,
+        touched: true
+      }
+    })
+  }
 
-  handlePasswordChange = (event) => {
-
+  handlePasswordChange = event => {
     return this.setState({
       password: {
         ...this.state.password,
         value: event.target.value,
-        error: this.props.passwordValidator !== undefined && event.target.value.match(this.props.passwordValidator) == null ? 'invalid' : ''
+        error:
+          this.props.passwordValidator !== undefined &&
+          event.target.value.match(this.props.passwordValidator) == null
+            ? 'invalid'
+            : ''
       },
-      buttonDisabled: this.state.username.error === '' && this.state.password.error === '' ? false : true
+      buttonDisabled:
+        this.state.username.error === '' && this.state.password.error === ''
+          ? false
+          : true
     })
   }
 
-  handleUsernameChange = (event) => {
-
+  handleUsernameChange = event => {
     return this.setState({
       username: {
         ...this.state.username,
         value: event.target.value,
-        error: this.props.usernameValidator !== undefined && event.target.value.match(this.props.usernameValidator) == null ? 'invalid' : ''
+        error:
+          this.props.usernameValidator !== undefined &&
+          event.target.value.match(this.props.usernameValidator) == null
+            ? 'invalid'
+            : ''
       },
-      buttonDisabled: this.state.username.error === '' && this.state.password.error === '' ? false : true
+      buttonDisabled:
+        this.state.username.error === '' && this.state.password.error === ''
+          ? false
+          : true
     })
   }
 
@@ -79,25 +90,28 @@ export default class UserForm extends Component {
   }
 
   render() {
-
-    const errorMessage = obj => obj.touched && obj.error.length > 0 ? obj.error : ""
+    const errorMessage = obj =>
+      obj.touched && obj.error.length > 0 ? obj.error : ''
 
     return (
       <div>
         <div>
           <TextField
-            key='username'
-            id='username'
+            key="username"
+            id="username"
             hintText="you@examle.com"
             floatingLabelText="Username"
             value={this.state.username.value}
             onChange={this.handleUsernameChange}
-            errorText={this.state.username.touched ? this.state.username.error : ''}
+            errorText={
+              this.state.username.touched ? this.state.username.error : ''
+            }
             onBlur={this.handleUsernameOnBlur}
-          /><br />
+          />
+          <br />
           <TextField
-            key='password'
-            id='password'
+            key="password"
+            id="password"
             hintText=""
             floatingLabelText="Password"
             value={this.state.password.value}
@@ -105,15 +119,15 @@ export default class UserForm extends Component {
             errorText={errorMessage(this.state.password)}
             onBlur={this.handlePasswordOnBlur}
           />
-          { this.props.passwordTooltip ? <PasswordTooltip /> : <div />}
+          {this.props.passwordTooltip ? <PasswordTooltip /> : <div />}
         </div>
         <br />
         <div>
-          <RaisedButton 
+          <RaisedButton
             disabled={this.state.buttonDisabled}
             label="Login"
             primary={true}
-            onClick={this.handleLoginClick} 
+            onClick={this.handleLoginClick}
           />
         </div>
       </div>
@@ -121,16 +135,15 @@ export default class UserForm extends Component {
   }
 }
 
-const PasswordTooltip = (text) => {
-
+const PasswordTooltip = () => {
   const handleMouseEnter = () => {
     //todo
   }
 
   return (
-    <InfoIcon 
+    <InfoIcon
       onMouseEnter={handleMouseEnter}
-      style={{marginRight: 24}}
+      style={{ marginRight: 24 }}
       color={blue500}
     />
   )

@@ -14,6 +14,7 @@ phases:
       - echo ".npmrc file content" ; cat .npmrc
   build:
     commands:
+      - npm run lint
       - npm run test
       - #node cicd/build_number.js $buildNum
       - npm publish --access public
