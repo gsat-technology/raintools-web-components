@@ -20,17 +20,52 @@ const MapPicker = compose(
   }),
   withScriptjs,
   withGoogleMap
-)(({ bounds, options, drawingOptions }) => {
+)(({ mapItems, drawingOptions, mapItemsSelected }) => {
   return (
-    <GoogleMap defaultZoom={8} defaultCenter={{ lat: -34.397, lng: 150.644 }}>
-      {bounds.map(item => (
-        <div key={`${item.north}${item.south}${item.east}${item.west}`}>
-          <Rectangle bounds={item} options={options} />
-        </div>
-      ))}
+    <GoogleMap defaultZoom={4} defaultCenter={{ lat: -34.397, lng: 150.644 }}>
+      {mapItems.map(item => {
+        return (
+          <div key={`${item.north}${item.south}${item.east}${item.west}`}>
+            <Rectangle
+              bounds={{
+                north: item.north,
+                south: item.south,
+                east: item.east,
+                west: item.west
+              }}
+              options={item.options}
+            />
+          </div>
+        )
+      })}
 
       <DrawingManager
-        defaultDrawingMode={window.google.maps.drawing.OverlayType.CIRCLE}
+        onRectangleComplete={rectangle => {
+          const drawnBounds = rectangle.getBounds()
+
+          if (rectangle != null) rectangle.setMap(null)
+
+          const intersected = []
+
+          mapItems.forEach((item, index) => {
+            const bounds = new window.google.maps.LatLngBounds(
+              new window.google.maps.LatLng({
+                lat: item.south,
+                lng: item.east
+              }),
+              new window.google.maps.LatLng({
+                lat: item.north,
+                lng: item.west
+              })
+            )
+
+            if (drawnBounds.intersects(bounds)) {
+              intersected.push(index)
+            }
+          })
+          mapItemsSelected(intersected)
+        }}
+        defaultDrawingMode={window.google.maps.drawing.OverlayType.RECTANGLE}
         defaultOptions={{
           drawingControl: true,
           drawingControlOptions: {
