@@ -59,7 +59,10 @@ const MapPicker = compose(
               })
             )
 
-            if (drawnBounds.intersects(bounds)) {
+            if (
+              drawnBounds.contains(bounds.getNorthEast()) &&
+              drawnBounds.contains(bounds.getSouthWest())
+            ) {
               intersected.push(index)
             }
           })

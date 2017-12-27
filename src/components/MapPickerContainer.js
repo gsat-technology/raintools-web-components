@@ -31,7 +31,10 @@ class MapContainer extends React.Component {
             options: this.props.rectangleOptions.highlight
           }
         } else {
-          return item
+          return {
+            ...item,
+            options: this.props.rectangleOptions.default
+          }
         }
       })
     })
