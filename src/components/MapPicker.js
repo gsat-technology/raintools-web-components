@@ -10,13 +10,15 @@ const {
   DrawingManager
 } = require('react-google-maps/lib/components/drawing/DrawingManager')
 
-const MapPicker = compose(
+const MapPickerSubComponent = compose(
   withProps({
     googleMapURL:
       'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing',
-    loadingElement: <div style={{ height: '100%' }} />,
-    containerElement: <div style={{ height: '400px' }} />,
-    mapElement: <div style={{ height: '100%' }} />
+    loadingElement: <div id="loading-element" style={{ height: '100%' }} />,
+    containerElement: (
+      <div id="container-element" style={{ height: '400px' }} />
+    ),
+    mapElement: <div id="map-element" style={{ height: '100%' }} />
   }),
   withScriptjs,
   withGoogleMap
@@ -81,5 +83,58 @@ const MapPicker = compose(
     </GoogleMap>
   )
 })
+
+class MapPicker extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      mapItems: this.props.mapItems.map(item => ({
+        ...item,
+        options: this.props.rectangleOptions.default
+      })),
+      drawingOptions: {
+        rectangle: {
+          fillOpacity: 1,
+          strokeWeight: 5,
+          clickable: false,
+          editable: true,
+          zIndex: 1
+        }
+      }
+    }
+  }
+
+  handleMapItemsSelected = ids => {
+    this.setState({
+      ...this.state,
+      mapItems: this.state.mapItems.map((item, index) => {
+        if (ids.indexOf(index) !== -1) {
+          return {
+            ...item,
+            options: this.props.rectangleOptions.highlight
+          }
+        } else {
+          return {
+            ...item,
+            options: this.props.rectangleOptions.default
+          }
+        }
+      })
+    })
+
+    this.props.mapItemsSelected(ids)
+  }
+
+  render() {
+    return (
+      <MapPickerSubComponent
+        mapItemsSelected={this.handleMapItemsSelected}
+        mapItems={this.state.mapItems}
+        drawingOptions={this.state.drawingOptions.rectangle}
+      />
+    )
+  }
+}
 
 export default MapPicker
