@@ -79,6 +79,7 @@ Resources:
   CodeBuild:
     Type: "AWS::CodeBuild::Project"
     Properties: 
+      BadgeEnabled: true
       Artifacts:
         Name: build
         Packaging: NONE
