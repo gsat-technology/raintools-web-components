@@ -3,7 +3,9 @@
   "env": {
     "browser": true,
     "es6": true,
-    "amd": true
+    "amd": true,
+    "mocha": true,
+    "cypress/globals": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
@@ -13,7 +15,7 @@
     },
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "cypress"],
   "rules": {
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
