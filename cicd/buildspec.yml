@@ -3,7 +3,8 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo  install phase
+      - apt-get update
+      - apt-get install -y awscli
   pre_build:
     commands:
       - printenv
@@ -16,6 +17,7 @@ phases:
     commands:
       - npm run lint
       - npm run test
+      - npm run cypress:ci
       - #node cicd/build_number.js $buildNum
       - npm publish --access public
       - npm run storybook-static
