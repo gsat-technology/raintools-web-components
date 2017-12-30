@@ -24,8 +24,8 @@ export default class VerificationCodeForm extends Component {
             key="username"
             id="username"
             value="1"
-            onChange={() => console.log('change')}
-            onBlur={() => console.log('blur')}
+            onChange={() => {}}
+            onBlur={() => {}}
           />
         </div>
         <br />
