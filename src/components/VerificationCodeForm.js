@@ -11,32 +11,38 @@ const styles = {
 export default class VerificationCodeForm extends Component {
   constructor(props) {
     super(props)
+    this.state = { inputs: Array(props.length).fill('') }
+  }
 
-    this.state = {}
+  focusNameInputField() {
+    this.refs.nameInputField.focus()
+  }
+
+  createCodeField = (id, value) => {
+    return (
+      <TextField
+        style={styles.input}
+        key={id}
+        id={id}
+        value={value}
+        onChange={event => {
+          this.setState({ ...this.state, id: event.target.value })
+          this.focusNameInputField()
+        }}
+        ref={id}
+      />
+    )
   }
 
   render() {
     return (
       <div>
-        <div>
-          <TextField
-            style={styles.input}
-            key="username"
-            id="username"
-            value="1"
-            onChange={() => {}}
-            onBlur={() => {}}
-          />
-        </div>
-        <br />
-        <div>
-          <RaisedButton
-            disabled={this.state.buttonDisabled}
-            label="Login"
-            primary={true}
-            onClick={this.handleLoginClick}
-          />
-        </div>
+        <RaisedButton
+          disabled={this.state.buttonDisabled}
+          label="Login"
+          primary={true}
+          onClick={this.handleLoginClick}
+        />{' '}
       </div>
     )
   }

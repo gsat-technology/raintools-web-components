@@ -33,7 +33,7 @@ storiesOf('UserForm', module)
 
 storiesOf('VerificationCodeForm', module).add('form', () => (
   <MuiThemeProvider>
-    <VerificationCodeForm />
+    <VerificationCodeForm length={6} />
   </MuiThemeProvider>
 ))
 

@@ -3,8 +3,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - apt-get update
-      - apt-get install -y awscli
+      - echo install
   pre_build:
     commands:
       - printenv

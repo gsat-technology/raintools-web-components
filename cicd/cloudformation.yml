@@ -27,6 +27,10 @@ Parameters:
   HostedZoneName:
       Type: String
       Description: Route53 hosted zone domain name e.g. yourdomain.com (don't include trailing '.')
+  
+  ECRImage:
+      Type: String
+      Description: name of docker image in ecr for CodeBuild
 
 Mappings:
   HostedZoneIdMap:
@@ -88,7 +92,7 @@ Resources:
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: docker.io/cypress/base:ubuntu16
+        Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${ECRImage}
         EnvironmentVariables:
           -
             Name: storybookBucket
