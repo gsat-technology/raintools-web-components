@@ -18,6 +18,7 @@ phases:
       - npm run test
       - npm run cypress:ci
       - #node cicd/build_number.js $buildNum
+      - npm run dist
       - npm publish --access public
       - npm run storybook-static
       - aws s3 cp --recursive storybookstatic/ s3://$storybookBucket

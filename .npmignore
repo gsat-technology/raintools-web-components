@@ -5,8 +5,13 @@
 /stories
 /test
 /dist
-/src/index.js
+/src
+/cypress
+/style
 
+cypress.json
+index.html
+REPO_README.md
 .babelrc
 .npmrc
 package-lock.json

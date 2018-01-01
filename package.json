@@ -6,18 +6,15 @@
   "repository": "",
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "test":
-      "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
+    "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "storybook-static": "build-storybook -c .storybook -o storybookstatic",
-    "dist":
-      "export NODE_ENV=production; `npm bin`/webpack --config ./webpack.config.js -p --profile --optimize-minimize",
+    "dist": "export NODE_ENV=production; `npm bin`/webpack --config ./webpack.config.js -p --profile --optimize-minimize",
     "lint": "./node_modules/.bin/eslint ./src",
     "cypress:open": "./node_modules/.bin/cypress open",
     "cypress:run": "./node_modules/.bin/cypress run",
-    "cypress:ci":
-      "npm start & wait-on http://localhost:8080 ; npm run cypress:run"
+    "cypress:ci": "npm start & wait-on http://localhost:8080 ; npm run cypress:run"
   },
   "author": "",
   "license": "",
@@ -28,6 +25,7 @@
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
+    "babel-preset-stage-1": "^6.24.1",
     "chai": "^3.5.0",
     "chai-jquery": "^2.0.0",
     "cypress": "^1.4.1",
@@ -38,11 +36,10 @@
     "jsdom": "^8.1.0",
     "mocha": "^2.4.5",
     "react-router-dom": "^4.2.2",
-    "webpack": "^1.12.9",
+    "webpack": "^2.1.0-beta.22",
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "babel-preset-stage-1": "^6.1.18",
     "material-ui": "^0.20.0",
     "material-ui-textfield-icon": "^0.2.2-1",
     "react": "^15.4.2",
