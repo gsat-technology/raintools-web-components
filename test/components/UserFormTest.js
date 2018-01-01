@@ -35,10 +35,6 @@ describe('UserForm', () => {
       expect(component.find('button').length).to.exist
     })
 
-    it('button can be clicked', () => {
-      //
-    })
-
     describe('enter invalid values', () => {
       beforeEach(() => {
         component.find('#username').simulate('change', 'bademail.@@')

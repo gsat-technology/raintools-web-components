@@ -1,6 +1,6 @@
 {
   "name": "@gsat/react-components",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "react components",
   "main": "index.js",
   "repository": "",
@@ -37,15 +37,17 @@
     "jquery": "^2.2.1",
     "jsdom": "^8.1.0",
     "mocha": "^2.4.5",
+    "react-router-dom": "^4.2.2",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
     "babel-preset-stage-1": "^6.1.18",
-    "material-ui": "^0.19.4",
+    "material-ui": "^0.20.0",
+    "material-ui-textfield-icon": "^0.2.2-1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-google-maps": "^9.4.3",
-    "react-router-dom": "^4.2.2"
+    "react-tooltip": "^3.4.0"
   }
 }

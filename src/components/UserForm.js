@@ -3,6 +3,8 @@ import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import InfoIcon from 'material-ui/svg-icons/action/info'
 import { blue500 } from 'material-ui/styles/colors'
+import TextFieldIcon from 'material-ui-textfield-icon'
+import ReactTooltip from 'react-tooltip'
 
 export default class UserForm extends Component {
   constructor(props) {
@@ -109,23 +111,44 @@ export default class UserForm extends Component {
             onBlur={this.handleUsernameOnBlur}
           />
           <br />
-          <TextField
-            key="password"
-            id="password"
-            hintText=""
-            floatingLabelText="Password"
-            value={this.state.password.value}
-            onChange={this.handlePasswordChange}
-            errorText={errorMessage(this.state.password)}
-            onBlur={this.handlePasswordOnBlur}
-          />
-          {this.props.passwordTooltip ? <PasswordTooltip /> : <div />}
+          {this.props.passwordTooltip ? (
+            <TextFieldIcon
+              key="password"
+              id="password"
+              hintText=""
+              type="password"
+              floatingLabelText="Password"
+              value={this.state.password.value}
+              onChange={this.handlePasswordChange}
+              errorText={errorMessage(this.state.password)}
+              onBlur={this.handlePasswordOnBlur}
+              icon={
+                <PasswordTooltip
+                  heading={this.props.passwordTooltip.heading}
+                  subheading={this.props.passwordTooltip.subheading}
+                  items={this.props.passwordTooltip.items}
+                />
+              }
+            />
+          ) : (
+            <TextField
+              key="password"
+              id="password"
+              type="password"
+              hintText=""
+              floatingLabelText="Password"
+              value={this.state.password.value}
+              onChange={this.handlePasswordChange}
+              errorText={errorMessage(this.state.password)}
+              onBlur={this.handlePasswordOnBlur}
+            />
+          )}
         </div>
         <br />
         <div>
           <RaisedButton
             disabled={this.state.buttonDisabled}
-            label="Login"
+            label={this.props.buttonLabel}
             primary={true}
             onClick={this.handleLoginClick}
           />
@@ -135,16 +158,27 @@ export default class UserForm extends Component {
   }
 }
 
-const PasswordTooltip = () => {
-  const handleMouseEnter = () => {
-    //todo
-  }
-
+const PasswordTooltip = ({ heading, subheading, items }) => {
   return (
-    <InfoIcon
-      onMouseEnter={handleMouseEnter}
-      style={{ marginRight: 24 }}
-      color={blue500}
-    />
+    <div>
+      <InfoIcon
+        data-tip
+        data-for="helpTooltip"
+        style={{ marginRight: 24 }}
+        color={blue500}
+      />
+      <ReactTooltip id="helpTooltip" type="info">
+        <p>{heading}</p>
+        <span>{subheading}</span>
+        {items.map(item => (
+          <div key={item}>
+            <span className="tooltip-item" style={{ alignText: 'left' }}>
+              {item}
+            </span>
+            <br />
+          </div>
+        ))}
+      </ReactTooltip>
+    </div>
   )
 }

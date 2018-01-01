@@ -14,26 +14,47 @@ storiesOf('UserForm', module)
         usernameValidator={usernameRe}
         passwordValidator={passwordRe}
         loginClick={creds => console.log(creds)}
+        buttonLabel={'login'}
       />
     </MuiThemeProvider>
   ))
   .add('form w/out validation', () => (
     <MuiThemeProvider>
-      <UserForm loginClick={creds => console.log(creds)} />
+      <UserForm
+        loginClick={creds => console.log(creds)}
+        buttonLabel={'login'}
+      />
     </MuiThemeProvider>
   ))
   .add('form w/ password tooltip', () => (
     <MuiThemeProvider>
       <UserForm
-        passwordTooltip={'minimum 8 characters'}
+        usernameValidator={usernameRe}
+        passwordValidator={passwordRe}
+        passwordTooltip={{
+          heading: 'password requirements',
+          // subheading: 'this is sub',
+          items: [
+            'min 8 characters',
+            '1 number',
+            '1 lowercase',
+            '1 uppercase',
+            '1 special'
+          ]
+        }}
         loginClick={creds => console.log(creds)}
+        buttonLabel={'login'}
       />
     </MuiThemeProvider>
   ))
 
 storiesOf('VerificationCodeForm', module).add('form', () => (
   <MuiThemeProvider>
-    <VerificationCodeForm length={6} />
+    <VerificationCodeForm
+      length={6}
+      buttonLabel={'verify'}
+      verifyButtonClick={code => console.log(code)}
+    />
   </MuiThemeProvider>
 ))
 
