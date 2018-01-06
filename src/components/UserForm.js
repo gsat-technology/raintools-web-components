@@ -56,16 +56,12 @@ export default class UserForm extends Component {
           event.target.value.match(this.props.passwordValidator) == null
             ? 'invalid'
             : ''
-      },
-      buttonDisabled:
-        this.state.username.error === '' && this.state.password.error === ''
-          ? false
-          : true
+      }
     })
   }
 
   handleUsernameChange = event => {
-    return this.setState({
+    this.setState({
       username: {
         ...this.state.username,
         value: event.target.value,
@@ -74,21 +70,32 @@ export default class UserForm extends Component {
           event.target.value.match(this.props.usernameValidator) == null
             ? 'invalid'
             : ''
-      },
-      buttonDisabled:
-        this.state.username.error === '' && this.state.password.error === ''
-          ? false
-          : true
+      }
     })
   }
 
-  handleLoginClick = () => {
+  handleButtonClick = () => {
     const creds = {
       username: this.state.username.value,
       password: this.state.password.value
     }
 
-    this.props.loginClick(creds)
+    this.props.buttonClick(creds)
+  }
+
+  buttonIsDisabled = () => {
+    //if no validator
+    if (!this.props.passwordValidator && !this.props.usernameValidator) {
+      return false
+    }
+
+    if (
+      this.state.username.error !== '' ||
+      this.state.password.error !== '' ||
+      (this.state.username.value === '' || this.state.password.value === '')
+    ) {
+      return true
+    }
   }
 
   render() {
@@ -99,6 +106,8 @@ export default class UserForm extends Component {
       <div>
         <div>
           <TextField
+            tabIndex={1}
+            fullWidth={true}
             key="username"
             id="username"
             hintText="you@examle.com"
@@ -113,6 +122,8 @@ export default class UserForm extends Component {
           <br />
           {this.props.passwordTooltip ? (
             <TextFieldIcon
+              tabIndex={2}
+              fullWidth={true}
               key="password"
               id="password"
               hintText=""
@@ -132,6 +143,8 @@ export default class UserForm extends Component {
             />
           ) : (
             <TextField
+              tabIndex={2}
+              fullWidth={true}
               key="password"
               id="password"
               type="password"
@@ -147,10 +160,11 @@ export default class UserForm extends Component {
         <br />
         <div>
           <RaisedButton
-            disabled={this.state.buttonDisabled}
+            tabIndex={3}
+            disabled={this.buttonIsDisabled()}
             label={this.props.buttonLabel}
             primary={true}
-            onClick={this.handleLoginClick}
+            onClick={this.handleButtonClick}
           />
         </div>
       </div>

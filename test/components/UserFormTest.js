@@ -11,7 +11,7 @@ describe('UserForm', () => {
       component = renderComponent(UserForm, {
         usernameValidator: usernameRe,
         passwordValidator: passwordRe,
-        loginClick: creds => {
+        buttonClick: creds => {
           clickResult = creds
         }
       })
@@ -97,7 +97,7 @@ describe('UserForm', () => {
       component = renderComponent(UserForm, {
         usernameValidator: usernameRe,
         passwordValidator: passwordRe,
-        loginClick: () => {}
+        buttonClick: () => {}
       })
     })
 
