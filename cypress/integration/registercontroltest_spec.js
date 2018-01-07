@@ -55,7 +55,7 @@ describe('Register Control', function() {
     cy.get('#register-control-message').should('not.exist')
   })
 
-  it('register existing user with correct verification code', function() {
+  it('attempt register existing user', function() {
     cy.visit('http://localhost:8080/registercontrol')
     cy
       .get('#username')
