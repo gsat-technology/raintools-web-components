@@ -160,6 +160,7 @@ export default class UserForm extends Component {
         <br />
         <div>
           <RaisedButton
+            id={'user-form-button'}
             tabIndex={3}
             disabled={this.buttonIsDisabled()}
             label={this.props.buttonLabel}

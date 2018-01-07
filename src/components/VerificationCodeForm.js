@@ -63,6 +63,7 @@ export default class VerificationCodeForm extends Component {
         )}
         <br />
         <RaisedButton
+          id={'verification-code-form-button'}
           disabled={this.state.buttonDisabled}
           label={this.props.buttonLabel}
           primary={true}

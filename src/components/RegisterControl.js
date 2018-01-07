@@ -28,10 +28,17 @@ class RegisterControl extends React.Component {
       <div>
         <Card>
           <div style={styles.container}>
-            <CardTitle title="Register" style={styles.cardTitle} />
+            <CardTitle
+              title="Register"
+              subtitle={this.props.subtitle}
+              style={styles.cardTitle}
+            />
             <div style={styles.message}>
               {this.props.message ? (
-                <Message text={this.props.message} />
+                <Message
+                  id="register-control-message"
+                  text={this.props.message}
+                />
               ) : null}
             </div>
             {this.props.showVerificationCodeForm ? (

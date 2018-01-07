@@ -9,10 +9,10 @@ const styles = {
   }
 }
 
-const Message = ({ text }) => {
+const Message = ({ text, id }) => {
   return (
     <div style={styles.container}>
-      <span>{text}</span>
+      <span id={id}>{text}</span>
     </div>
   )
 }

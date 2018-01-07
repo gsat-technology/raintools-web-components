@@ -7,30 +7,18 @@ const validCreds = {
   password: 'Tester1@'
 }
 
-const styles = {
-  success: {
-    color: 'green'
-  },
-  failed: {
-    color: 'red'
-  }
-}
-
 class LoginControlDemo extends React.Component {
   state = {
-    message: '',
-    status: ''
+    message: ''
   }
 
   loginClick = creds => {
-    let status = 'failed'
     if (
-      creds.username === validCreds.username &&
-      creds.password === validCreds.password
+      creds.username !== validCreds.username ||
+      creds.password !== validCreds.password
     ) {
-      status = 'success'
+      this.setState({ message: 'incorrect username or password' })
     }
-    this.setState({ status })
   }
 
   render() {
@@ -44,14 +32,6 @@ class LoginControlDemo extends React.Component {
             />
           </MuiThemeProvider>
         </div>
-        result:{' '}
-        <span
-          style={
-            this.state.status === 'success' ? styles.success : styles.failed
-          }
-        >
-          {this.state.status}
-        </span>
       </div>
     )
   }

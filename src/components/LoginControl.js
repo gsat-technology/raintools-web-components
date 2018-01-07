@@ -26,7 +26,7 @@ class LoginControl extends React.Component {
             <CardTitle title="Login" style={styles.cardTitle} />
             <div style={styles.message}>
               {this.props.message ? (
-                <Message text={this.props.message} />
+                <Message id="login-control-message" text={this.props.message} />
               ) : null}
             </div>
             <UserForm
