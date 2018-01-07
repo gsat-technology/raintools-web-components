@@ -6,18 +6,15 @@
   "repository": "",
   "scripts": {
     "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "test":
-      "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
+    "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "storybook-static": "build-storybook -c .storybook -o storybookstatic",
-    "dist":
-      "export NODE_ENV=production; `npm bin`/webpack --config ./webpack.config.js -p --profile --optimize-minimize",
+    "dist": "export NODE_ENV=production; `npm bin`/webpack --config ./webpack.config.js -p --profile --optimize-minimize",
     "lint": "./node_modules/.bin/eslint ./src",
     "cypress:open": "./node_modules/.bin/cypress open",
     "cypress:run": "./node_modules/.bin/cypress run",
-    "cypress:ci":
-      "npm start & wait-on http://localhost:8080 ; npm run cypress:run"
+    "cypress:ci": "npm start & wait-on http://localhost:8080 ; npm run cypress:run"
   },
   "author": "",
   "license": "",
