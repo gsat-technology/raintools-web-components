@@ -7,7 +7,7 @@ import LoginControl from '../src/components/LoginControl'
 import RegisterControl from '../src/components/RegisterControl'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { usernameRe, passwordRe } from '../src/regex/index'
-import MapPickerDemo from '../src/components/MapPickerDemo'
+import MapPickerDemo from '../src/demos/MapPickerDemo'
 
 storiesOf('UserForm', module)
   .add('form w/ validation', () => (
